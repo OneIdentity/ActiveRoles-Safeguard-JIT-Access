@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+
+  <Product Id="*" 
+           Name="ARS-Safeguard JIT Access" 
+           Language="1033" 
+           Version="!(bind.FileVersion.ARSGJITACCESS_EXE)" 
+           Manufacturer="One Identity" 
+           UpgradeCode="aa3cccfd-f6f5-4716-a446-7750ec06bca8">
+
+    <Package InstallerVersion="200" 
+             Compressed="yes" 
+             InstallScope="perUser" 
+             InstallPrivileges="limited" />
+
+		<MajorUpgrade DowngradeErrorMessage="A newer version of ARS-Safeguard JIT Access is already installed." />
+
+		<MediaTemplate EmbedCab="yes" />
+
+    <WixVariable Id="WixUIBannerBmp" Value="$(var.SolutionDir)\Installer\resources\install-banner.bmp"/>
+    <WixVariable Id="WixUIDialogBmp" Value="$(var.SolutionDir)\Installer\resources\install-panel.bmp"/>
+    <WixVariable Id="WixUILicenseRtf" Value="$(var.SolutionDir)\Installer\resources\license.rtf"/>
+
+    <Feature Id="ProductFeature" Title="$(var.SolutionName)" Level="1" Display='expand' ConfigurableDirectory='INSTALLFOLDER'>
+      <Feature Id='MainProgram' Title='Program' Description='The main executable.' Level='1'>
+        <ComponentRef Id="ARSGJITACCESS_EXE"/>
+        <ComponentRef Id="Common_dll"/>
+        <ComponentRef Id="SignalR_dll"/>
+        <ComponentRef Id="Topshelf_Serilog_dll"/>
+        <ComponentRef Id="Topshelf_dll"/>
+        <ComponentRef Id="Newtonsoft_dll"/>
+        <ComponentRef Id="SafeguardDotNet_dll"/>
+        <ComponentRef Id="RestSharp_dll"/>
+        <ComponentRef Id="Serilog_dll"/>
+        <ComponentRef Id="Serilog_Sinks_Console_dll"/>
+        <ComponentRef Id="Serilog_Sinks_EventLog_dll"/>
+        <ComponentRef Id="ARSGJitAccess.exe.config"/>
+      </Feature>
+    </Feature>
+
+    <UI>
+      <UIRef Id="WixUI_Minimal" />
+    </UI>
+    
+    <CustomAction Id="InstallAndConfigureService"
+                  Execute="immediate"
+                  Return="ignore"
+                  Impersonate="yes"
+                  FileKey="ARSGJITACCESS_EXE"
+                  ExeCommand="-installAndConfigureService"/>
+    
+    <CustomAction Id="UninstallService"
+                  Execute="immediate"
+                  Return="ignore"
+                  Impersonate="yes"
+                  FileKey="ARSGJITACCESS_EXE"
+                  ExeCommand="-uninstallService"/>
+
+    <InstallExecuteSequence>
+      <Custom Action="InstallAndConfigureService" After="InstallFinalize">NOT (REMOVE="ALL")</Custom>
+      <Custom Action="UninstallService" Before="InstallFinalize">(NOT UPGRADINGPRODUCTCODE) AND (REMOVE="ALL")</Custom>
+    </InstallExecuteSequence>
+
+	</Product>
+
+	<Fragment>
+    <Directory Id="TARGETDIR" Name="SourceDir">
+      <Directory Id="ProgramFilesFolder">
+        <Directory Id="OneIdentity" Name="One Identity">
+          <Directory Id="INSTALLFOLDER" Name="ARSSG-JitAccess" >
+            <Component Id="ARSGJITACCESS_EXE">
+              <File Id="ARSGJITACCESS_EXE" Source="$(var.SolutionDir)Service\bin\Release\ARSGJitAccess.exe" Name="ARSGJitAccess.exe"/>            
+            </Component>
+            <Component Id="Common_dll">
+              <File Id="Common_dll" Source="$(var.SolutionDir)Service\bin\Release\ARSGJitAccessCommon.dll" Name="ARSGJitAccessCommon.dll" />
+            </Component>
+            <Component Id="SignalR_dll">
+              <File Id="SignalR_dll" Source="$(var.SolutionDir)Service\bin\Release\Microsoft.AspNet.SignalR.Client.dll" Name="Microsoft.AspNet.SignalR.Client.dll" />
+            </Component>
+            <Component Id="Newtonsoft_dll">
+              <File Id="Newtonsoft_dll" Source="$(var.SolutionDir)Service\bin\Release\Newtonsoft.Json.dll" Name="Newtonsoft.Json.dll" />
+            </Component>
+            <Component Id="SafeguardDotNet_dll">
+              <File Id="SafeguardDotNet_dll" Source="$(var.SolutionDir)Service\bin\Release\OneIdentity.SafeguardDotNet.dll" Name="OneIdentity.SafeguardDotNet.dll" />
+            </Component>
+            <Component Id="RestSharp_dll">
+              <File Id="RestSharp_dll" Source="$(var.SolutionDir)Service\bin\Release\RestSharp.dll" Name="RestSharp.dll" />
+            </Component>
+            <Component Id="Serilog_dll">
+              <File Id="Serilog_dll" Source="$(var.SolutionDir)Service\bin\Release\Serilog.dll" Name="Serilog.dll" />
+            </Component>
+            <Component Id="Serilog_Sinks_Console_dll">
+              <File Id="Serilog_Sinks_Console_dll" Source="$(var.SolutionDir)Service\bin\Release\Serilog.Sinks.Console.dll" Name="Serilog.Sinks.Console.dll" />
+            </Component>
+            <Component Id="Serilog_Sinks_EventLog_dll">
+              <File Id="Serilog_Sinks_EventLog_dll" Source="$(var.SolutionDir)Service\bin\Release\Serilog.Sinks.EventLog.dll" Name="Serilog.Sinks.EventLog.dll" />
+            </Component>
+            <Component Id="Topshelf_dll">
+              <File Id="Topshelf_dll" Source="$(var.SolutionDir)Service\bin\Release\Topshelf.dll" Name="Topshelf.dll" />
+            </Component>
+            <Component Id="Topshelf_Serilog_dll">
+              <File Id="Topshelf_Serilog_dll" Source="$(var.SolutionDir)Service\bin\Release\Topshelf.Serilog.dll" Name="Topshelf.Serilog.dll" />
+            </Component>
+            <Component Id="ARSGJitAccess.exe.config">
+              <File Id="ARSGJitAccess.exe.config" Source="$(var.SolutionDir)Service\bin\Release\ARSGJitAccess.exe.config" Name="ARSGJitAccess.exe.config" />
+            </Component>
+          </Directory>
+        </Directory>
+      </Directory>
+		</Directory>
+	</Fragment>
+</Wix>

@@ -1,0 +1,22 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <AssemblyName>ARSGJitAccessCommon</AssemblyName>
+    <RootNamespace>OneIdentity.ARSGJitAccess.Common</RootNamespace>
+    <ApplicationIcon />
+    <OutputType>Library</OutputType>
+    <StartupObject />
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="ActiveRolesPowershellClient.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="OneIdentity.SafeguardDotNet" Version="6.0.0" />
+    <PackageReference Include="System.Configuration.ConfigurationManager" Version="4.7.0" />
+    <PackageReference Include="System.DirectoryServices" Version="4.7.0" />
+  </ItemGroup>
+
+</Project>
