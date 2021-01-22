@@ -55,7 +55,14 @@ namespace OneIdentity.ARSGJitAccess.Service
                     Config.ConfigureAppSettings();
                     Config.InstallService();
                 });
-                x.AddCommandLineDefinition("uninstallService", v=>Config.UninstallService());
+                x.AddCommandLineDefinition("uninstallService", v => Config.UninstallService());
+                x.AddCommandLineDefinition("installAndConfigureFile", v =>
+                {
+                    Config.ConfigureFromFile();
+                    Config.ConfigureAppSettings();
+                    Config.InstallService();
+                });
+                x.AddCommandLineDefinition("UseConfigFile", v => { Config.SetConfigFile(v); });
             });
 
             var exitCode = (int)Convert.ChangeType(rc, rc.GetTypeCode());  
