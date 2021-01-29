@@ -551,15 +551,21 @@ namespace OneIdentity.ARSGJitAccess.Service
             }
         }
 
-        public static void InstallService()
+        public static void InstallService(string instanceName = null)
         {
             Console.WriteLine("-----------------------------");
             Console.WriteLine("ARSGJitAccess Service Install");
             Console.WriteLine("-----------------------------");
 
+            string arguments = "install";
+            if(!string.IsNullOrEmpty(_configPath))
+                arguments += $" -ConfigFile \"{_configFile.FilePath}\"";
+            if (!string.IsNullOrEmpty(instanceName))
+                arguments += $" -instance \"{instanceName}\"";
+
             var info = new ProcessStartInfo
             {
-                Arguments = "install",
+                Arguments = arguments,
                 FileName = "ARSGJitAccess.exe",
                 UseShellExecute = false
             };

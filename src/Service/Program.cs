@@ -3,6 +3,7 @@ using System;
 using System.Reflection;
 using System.Security;
 using Topshelf;
+using Topshelf.StartParameters;
 
 namespace OneIdentity.ARSGJitAccess.Service
 {
@@ -56,13 +57,18 @@ namespace OneIdentity.ARSGJitAccess.Service
                     Config.InstallService();
                 });
                 x.AddCommandLineDefinition("uninstallService", v => Config.UninstallService());
-                x.AddCommandLineDefinition("installAndConfigureFile", v =>
+                x.AddCommandLineDefinition("installAndConfigureInstance", v =>
                 {
                     Config.ConfigureFromFile();
                     Config.ConfigureAppSettings();
-                    Config.InstallService();
+                    Config.InstallService(v);
                 });
-                x.AddCommandLineDefinition("UseConfigFile", v => { Config.SetConfigFile(v); });
+                x.EnableStartParameters();
+                x.WithStartParameter("ConfigFile", f =>
+                {
+                    Config.SetConfigFile(f);
+                });
+
             });
 
             var exitCode = (int)Convert.ChangeType(rc, rc.GetTypeCode());  
