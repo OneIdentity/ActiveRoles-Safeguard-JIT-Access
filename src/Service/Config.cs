@@ -582,15 +582,19 @@ namespace OneIdentity.ARSGJitAccess.Service
 
             Environment.Exit(0);
         }
-        public static void UninstallService()
+        public static void UninstallService(string instanceName = null)
         {
             Console.WriteLine("-----------------------------");
             Console.WriteLine("ARSGJitAccess Service Uninstall");
             Console.WriteLine("-----------------------------");
 
+            var args = "uninstall";
+            if (!string.IsNullOrEmpty(instanceName))
+                args += $" -instance {instanceName}";
+
             var info = new ProcessStartInfo
             {
-                Arguments = "uninstall",
+                Arguments = args,
                 FileName = "ARSGJitAccess.exe",
                 UseShellExecute = false
             };

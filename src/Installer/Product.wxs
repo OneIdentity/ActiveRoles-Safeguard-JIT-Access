@@ -28,6 +28,7 @@
         <ComponentRef Id="Common_dll"/>
         <ComponentRef Id="SignalR_dll"/>
         <ComponentRef Id="Topshelf_Serilog_dll"/>
+        <ComponentRef Id="Topshelf_StartParameters_dll"/>
         <ComponentRef Id="Topshelf_dll"/>
         <ComponentRef Id="Newtonsoft_dll"/>
         <ComponentRef Id="SafeguardDotNet_dll"/>
@@ -104,6 +105,9 @@
             </Component>
             <Component Id="ARSGJitAccess.exe.config">
               <File Id="ARSGJitAccess.exe.config" Source="$(var.SolutionDir)Service\bin\Release\ARSGJitAccess.exe.config" Name="ARSGJitAccess.exe.config" />
+            </Component>
+            <Component Id="Topshelf_StartParameters_dll">
+              <File Id="Topshelf_StartParameters_dll" Source="$(var.SolutionDir)Service\bin\Release\Topshelf.StartParameters.dll" Name="Topshelf.StartParameters.dll" />
             </Component>
           </Directory>
         </Directory>
