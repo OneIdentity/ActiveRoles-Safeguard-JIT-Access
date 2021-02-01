@@ -13,23 +13,27 @@ Please watch the following video to see a demonstration of the just-in-time acce
 * [Full Install and Config Video](https://oneidentity.github.io/ActiveRoles-Safeguard-JIT-Access/install.html "Install Video")
 * [Download the installer and scripts](https://github.com/OneIdentity/ActiveRoles-Safeguard-JIT-Access/releases "Release")
 
-## Support
-One Identity open source projects are supported through One Identity GitHub issues and the One Identity Community. This includes all scripts, plugins, SDKs, modules, code snippets or other solutions. For assistance with any One Identity GitHub project, please raise a new Issue on the One Identity GitHub project page. You may also visit the One Identity Community to ask questions. Requests for assistance made through official One Identity Support will be referred back to GitHub and the One Identity Community forums where those requests can benefit all users.
+## Installing multiple instances
+Some users may desire to install multiple instances of Active Roles Just-in-Time Provisioning for Safeguard services for situations where different configurations are needed:
+* Having multiple services to toggle different ARS Attributes
+* Connecting to different Safeguard for Privileged Password appliances
+* Using different ARS or Safeguard service accounts. 
+````
+# Create config file from configuration workflow
+ARSGJITAccess.exe -config <file path>
 
-# New in 6.7.1
-* specify a custom config file 
-* install and uninstall multiple instances of the service.
-
-Users may desire to install multiple instances of Active Roles Just-in-Time Provisioning for Safeguard in situations where different configurations are needed. Examples would include having multiple services to toggle different ARS Attributes, connect to different Safeguard for Privileged Password appliances, or use different ARS or Safeguard accounts. 
-
-## Create config file from configuration workflow
-ARSGJITAccess.exe -config <file path> 
-
-## Manually Start Service with Custom Config File
+# Manually Start Service with Custom Config File
 ARSGJITAccess.exe -ConfigFile <path_to_config_file>
 
-## Install Multiple Instances
+# Install Multiple Instances
 ARSGJitAccess.exe -installAndConfigureInstance "<instance_name>"
 
-## Uninstall an Instance
+# (Uninstall an instance use)
 ARSGJITAccess.exe -uninstallService "<instance_name>"
+````
+
+## Versions
+You should use the [release](https://github.com/OneIdentity/ActiveRoles-Safeguard-JIT-Access/releases) of Safeguard JIT Access that matches the major.minor version of Safeguard SPP that you are using. New features and bug fixes will be made only for the most current version of Safeguard.  
+
+## Support
+One Identity open source projects are supported through One Identity GitHub issues and the One Identity Community. This includes all scripts, plugins, SDKs, modules, code snippets or other solutions. For assistance with any One Identity GitHub project, please raise a new Issue on the One Identity GitHub project page. You may also visit the One Identity Community to ask questions. Requests for assistance made through official One Identity Support will be referred back to GitHub and the One Identity Community forums where those requests can benefit all users.
