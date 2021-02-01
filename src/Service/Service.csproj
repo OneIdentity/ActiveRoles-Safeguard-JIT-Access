@@ -81,6 +81,9 @@
     <Reference Include="Topshelf.Serilog, Version=4.2.1.215, Culture=neutral, PublicKeyToken=b800c4cfcdeea87b, processorArchitecture=MSIL">
       <HintPath>..\packages\Topshelf.Serilog.4.2.1\lib\net452\Topshelf.Serilog.dll</HintPath>
     </Reference>
+    <Reference Include="Topshelf.StartParameters, Version=1.0.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Topshelf.StartParameters.1.0.2\lib\net462\Topshelf.StartParameters.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Config.cs" />

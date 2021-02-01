@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Security;
 using System.Security.Cryptography.X509Certificates;
+using System.IO;
 using Newtonsoft.Json.Linq;
 using OneIdentity.ARSGJitAccess.Common;
 using OneIdentity.SafeguardDotNet;
@@ -110,6 +111,15 @@ namespace OneIdentity.ARSGJitAccess.Service
             }
         }
 
+        internal static void SetConfigFile(string v)
+        {
+            _configPath = v.Replace(".config","");
+
+            File.Create(_configPath).Close();
+            _configFile = ConfigurationManager.OpenExeConfiguration(_configPath);
+            File.Delete(_configPath);
+        }
+
         public static SecureString SafeguardPassword
         {
             get
@@ -124,7 +134,10 @@ namespace OneIdentity.ARSGJitAccess.Service
 
         static string EmptyAsNull(string setting)
         {
-            var value = ConfigurationManager.AppSettings[setting];
+            var configFile = _configFile ?? ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
+
+            var value = configFile.AppSettings.Settings[setting]?.Value;
+
             if (value == null || value.Length == 0)
             {
                 return null;
@@ -134,7 +147,10 @@ namespace OneIdentity.ARSGJitAccess.Service
 
         static SecureString AsSecureStringEmptyAsNull(string setting)
         {
-            var value = ConfigurationManager.AppSettings[setting];
+            var configFile = _configFile ?? ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
+
+            var value = configFile.AppSettings.Settings[setting]?.Value;
+
             if (value == null || value.Length == 0)
             {
                 return null;
@@ -153,39 +169,90 @@ namespace OneIdentity.ARSGJitAccess.Service
             return secureString;
         }
 
+        private static string _configPath = null;
+        private static Configuration _configFile = null; 
+
+        public static void ConfigureFromFile()
+        {
+
+            Console.WriteLine("--------------------------------");
+            Console.WriteLine("ARSGJitAccess File Configuration");
+            Console.WriteLine("--------------------------------");
+
+            string dir = null;
+            while (!Directory.Exists(dir))
+            {
+                dir = GetSettingInput("Enter Configuration Directory Path. Empty for default");
+                if (string.IsNullOrEmpty(dir))
+                {
+                    Console.WriteLine("Using default");
+                    _configPath = null;
+                    return;
+                }
+            }
+
+            Console.WriteLine($"Directory {dir} exists.");
+
+            var fileName = GetSettingInput("Enter Configuration filename. Empty for default (ARSGJIT.config)");
+            if (string.IsNullOrEmpty(fileName))
+                fileName = "ARSGJIT";
+            else
+                fileName = fileName.Split('.')[0];
+
+            try
+            {
+                _configPath = Path.Combine(dir, fileName);
+
+                //This is a little acrobatic, but hear me out. 
+                //Using System.Configuration makes config read / write consistent regardless of whether it's the app.config or 
+                //a user's config file. 
+                //For that to work, ConfigurationManager.OpenExeConfiguration() needs an exe to open, or create, a config file.
+                //so we temporarily create an exe with the path and filename provided by the user, then open the configuration,
+                //then delete the exe. leaving us with file <filename>.exe.config. 
+                //Even when provided a file with .config extension, OpenExeConfiguration creates a new file with .config
+                //i.e, if provided MyArsgConfig.config, it would create and use MyArsgConfig.config.config. 
+                File.Create(_configPath + ".exe").Close();
+                _configFile = ConfigurationManager.OpenExeConfiguration(_configPath + ".exe");
+                File.Delete(_configPath + ".exe");
+            }
+
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: failed to create file {_configPath}. Message: {ex.Message}");
+                System.Environment.Exit(1);
+            }
+
+            Console.WriteLine($"File {_configPath}.exe.config successfully created.");
+
+            Console.WriteLine("-----------------------------------------");
+            Console.WriteLine("ARSGJitAccess File Configuration Complete");
+            Console.WriteLine("-----------------------------------------");
+        }
+
         public static void ConfigureAppSettings()
         {
             Console.WriteLine("---------------------------");
             Console.WriteLine("ARSGJitAccess Configuration");
             Console.WriteLine("---------------------------");
 
-            switch (GetServiceAuthType())
-            {
-                //no input; skip
-                case 0:
-                    break;
-                //Log on as Service option
-                case 1:
-                    ClearAppSetting("ActiveRolesUsername");
-                    ClearAppSetting("ActiveRolesPassword");
-
-                    break;
-                //Username / Password option
-                case 2:
-                    var arsUserName = GetSettingInput("ARS Username", ActiveRolesUsername);
-                    ActiveRolesUsername = arsUserName;
-
-                    ActiveRolesPassword = string.IsNullOrEmpty(ActiveRolesPassword) ?
-                        GetSettingInput("Initial ARS Password") :
-                        GetSettingInput("Initial ARS Password", new string('*', ActiveRolesPassword.Length));
-                    break;
-            }
+            int serviceAuthTypeSelection = GetServiceAuthType();
+            ConfigureServiceAuthType(serviceAuthTypeSelection);
 
             ARSGJitAccessAttribute = GetSettingInput("ARS Access Attribute", ARSGJitAccessAttribute);
 
             SafeguardAppliance = GetAndValidateApplianceAddress();
 
-            switch (GetSafeguardAuthType())
+            int safeguardAuthTypeSelection = GetSafeguardAuthType();
+            ConfigureSafeguardAuthType(safeguardAuthTypeSelection);
+
+            Console.WriteLine("------------------------------------");
+            Console.WriteLine("ARSGJitAccess Configuration Complete");
+            Console.WriteLine("------------------------------------");
+        }
+
+        private static void ConfigureSafeguardAuthType(int SafeguardAuthType)
+        {
+            switch (SafeguardAuthType)
             {
                 //no input; skip
                 case 0:
@@ -231,17 +298,30 @@ namespace OneIdentity.ARSGJitAccess.Service
 
                     break;
             }
-
-            Console.WriteLine("------------------------------------");
-            Console.WriteLine("ARSGJitAccess Configuration Complete");
-            Console.WriteLine("------------------------------------");
         }
 
-        private static string GetPassword(string pwd, string instruction)
+        private static void ConfigureServiceAuthType(int ServiceAuthType)
         {
-            return string.IsNullOrEmpty(pwd) ?
-                GetSettingInput(instruction) :
-                GetSettingInput(instruction, new string('*', pwd.Length));
+            switch (ServiceAuthType)
+            {
+                //no input; skip
+                case 0:
+                    break;
+                //Log on as Service option
+                case 1:
+                    ClearAppSetting("ActiveRolesUsername");
+                    ClearAppSetting("ActiveRolesPassword");
+
+                    break;
+                //Username / Password option
+                case 2:
+                    ActiveRolesUsername = GetSettingInput("ARS Username", ActiveRolesUsername);
+
+                    ActiveRolesPassword = string.IsNullOrEmpty(ActiveRolesPassword) ?
+                        GetSettingInput("Initial ARS Password") :
+                        GetSettingInput("Initial ARS Password", new string('*', ActiveRolesPassword.Length));
+                    break;
+            }
         }
 
         private static string GetAndValidateSafeguardCertificate()
@@ -275,20 +355,27 @@ namespace OneIdentity.ARSGJitAccess.Service
 
         private static string GetAndValidateSafeguardThumbprint()
         {
-            X509Certificate2Collection matchingCerts = new X509Certificate2Collection();
+            var emptyThumbprintString = -1;
+            var matchingCertCount = 0;
 
             string safeguardCertThumbprint = "";
-            while(matchingCerts.Count == 0)
+            while(matchingCertCount <= 0)
             {
                 safeguardCertThumbprint = GetSettingInput("Safeguard User Certificate Thumbprint",
                     SafeguardCertificateThumbprint);
 
-                if (safeguardCertThumbprint == "")
-                    break;
+                matchingCertCount = ValidateSafeguardCertThumbprint(safeguardCertThumbprint);
 
-                matchingCerts = GetMatchingCerts(safeguardCertThumbprint);
-                
-                if (matchingCerts.Count == 0)
+                if(matchingCertCount == emptyThumbprintString)
+                {
+                    var resp = GetSettingInput(
+                       $"\tProvided certificate thumbprint was empty. Continue?",
+                       "y/n");
+
+                    if (String.CompareOrdinal(resp, "y") == 0)
+                        break;
+                }
+                else if (matchingCertCount == 0)
                 {
                     var resp = GetSettingInput(
                         $"\tNo certificate with thumbprint {safeguardCertThumbprint} found in current user or local machine certificate store. Continue?",
@@ -299,10 +386,24 @@ namespace OneIdentity.ARSGJitAccess.Service
                 }
             }
 
-            if(!String.IsNullOrEmpty(safeguardCertThumbprint) && matchingCerts.Count > 0)
+            if(!String.IsNullOrEmpty(safeguardCertThumbprint) && matchingCertCount > 0)
                 Console.WriteLine($"\tFound certificate with thumbprint {safeguardCertThumbprint}.");
             
             return safeguardCertThumbprint;
+        }
+
+        private static int ValidateSafeguardCertThumbprint(string safeguardCertThumbprint)
+        {
+            var emptyThumbprintString = -1;
+
+            X509Certificate2Collection matchingCerts = new X509Certificate2Collection();
+
+            if (safeguardCertThumbprint == "")
+                return emptyThumbprintString;
+
+            matchingCerts = GetMatchingCerts(safeguardCertThumbprint);
+
+            return matchingCerts.Count;
         }
 
         private static X509Certificate2Collection GetMatchingCerts(string thumbprint, bool searchLocalMachine = true)
@@ -331,11 +432,11 @@ namespace OneIdentity.ARSGJitAccess.Service
             string applianceAddress = null;
             JObject response = null;
             var isValid = false;
-            while (response == null && !isValid)
+           while (response == null && !isValid)
             {
                 applianceAddress = GetSettingInput("Safeguard Appliance Address", SafeguardAppliance);
-
-                if (String.IsNullOrEmpty(applianceAddress))
+                
+                if (string.IsNullOrEmpty(applianceAddress))
                     return applianceAddress;
 
                 isValid = SafeguardRestApiClient.ValidateSafeguardApplianceAddress(applianceAddress, out response);
@@ -405,7 +506,8 @@ namespace OneIdentity.ARSGJitAccess.Service
         {
             try
             {
-                var configFile = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
+                var configFile = _configFile ?? ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
+
                 var settings = configFile.AppSettings.Settings;
 
                 if (settings[key] == null)
@@ -430,7 +532,8 @@ namespace OneIdentity.ARSGJitAccess.Service
 
             try
             {
-                var configFile = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
+                var configFile = _configFile ?? ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
+
                 var settings = configFile.AppSettings.Settings;
 
                 if (settings[key] == null)
@@ -439,6 +542,7 @@ namespace OneIdentity.ARSGJitAccess.Service
                     settings[key].Value = value;
 
                 configFile.Save(ConfigurationSaveMode.Modified);
+                
                 ConfigurationManager.RefreshSection(configFile.AppSettings.SectionInformation.Name);
             }
             catch (ConfigurationErrorsException ex)
@@ -447,15 +551,21 @@ namespace OneIdentity.ARSGJitAccess.Service
             }
         }
 
-        public static void InstallService()
+        public static void InstallService(string instanceName = null)
         {
             Console.WriteLine("-----------------------------");
             Console.WriteLine("ARSGJitAccess Service Install");
             Console.WriteLine("-----------------------------");
 
+            string arguments = "install";
+            if(!string.IsNullOrEmpty(_configPath))
+                arguments += $" -ConfigFile \"{_configFile.FilePath}\"";
+            if (!string.IsNullOrEmpty(instanceName))
+                arguments += $" -instance \"{instanceName}\"";
+
             var info = new ProcessStartInfo
             {
-                Arguments = "install",
+                Arguments = arguments,
                 FileName = "ARSGJitAccess.exe",
                 UseShellExecute = false
             };
@@ -472,15 +582,19 @@ namespace OneIdentity.ARSGJitAccess.Service
 
             Environment.Exit(0);
         }
-        public static void UninstallService()
+        public static void UninstallService(string instanceName = null)
         {
             Console.WriteLine("-----------------------------");
             Console.WriteLine("ARSGJitAccess Service Uninstall");
             Console.WriteLine("-----------------------------");
 
+            var args = "uninstall";
+            if (!string.IsNullOrEmpty(instanceName))
+                args += $" -instance {instanceName}";
+
             var info = new ProcessStartInfo
             {
-                Arguments = "uninstall",
+                Arguments = args,
                 FileName = "ARSGJitAccess.exe",
                 UseShellExecute = false
             };
