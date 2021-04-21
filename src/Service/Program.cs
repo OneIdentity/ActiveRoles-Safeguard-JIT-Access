@@ -77,6 +77,42 @@ namespace OneIdentity.ARSGJitAccess.Service
                         Config.InstallService(v);
                     }
                 });
+                x.AddCommandLineDefinition("loglevel", v =>
+                {
+                    var loggerConfig = new LoggerConfiguration();
+
+                    try
+                    {
+                        switch (v)
+                        {
+                            case "information":
+                                loggerConfig = loggerConfig.MinimumLevel.Information();
+                                break;
+                            case "warning":
+                                loggerConfig = loggerConfig.MinimumLevel.Warning();
+                                break;
+                            case "debug":
+                                loggerConfig = loggerConfig.MinimumLevel.Debug();
+                                break;
+                            case "error":
+                                loggerConfig = loggerConfig.MinimumLevel.Error();
+                                break;
+                            case "verbose":
+                                loggerConfig = loggerConfig.MinimumLevel.Verbose();
+                                break;
+                        }
+
+                        Log.Logger = loggerConfig.WriteTo.Console()
+                            .WriteTo.EventLog(AppName, manageEventSource: true)
+                            .CreateLogger();
+                    }
+                    catch (SecurityException)
+                    {
+                        Log.Logger = loggerConfig.WriteTo.Console().CreateLogger();
+                        Log.Warning("Unable to access Windows Event Log.  Logging console only");
+                    }
+
+                });
                 x.EnableStartParameters();
                 x.WithStartParameter("ConfigFile", f =>
                 {
@@ -96,6 +132,7 @@ namespace OneIdentity.ARSGJitAccess.Service
                 "Active Roles JIT Access for Safeguard Command-Line Reference\n" +
                 "------------------------------\n\n";
             var test = "\t-test : tests the current configuration\n\n";
+            var loglevel = "\t-loglevel : sets the log level for the application. Options: information, warning, debug, error, verbose. Defaults to information.\n\n";
             var config = "\t-config <file path>: launches configuration workflow and tests configuration. If no file path is provided, the default is used.\n\n";
             var installAndConfigureService = "\t-installAndConfigureService : launches configuration workflow, tests configuration, and installs service.\n\n";
             var installAndConfigureInstance = "\t-installAndConfigureInstance <name>: prompts for configuration file path, launches configuration workflow, " +
@@ -104,7 +141,7 @@ namespace OneIdentity.ARSGJitAccess.Service
             var footer = "\n------------------------------\n";
 
 
-            return string.Concat(new String[]{header,test,config,installAndConfigureService,installAndConfigureInstance,configFile,footer});
+            return string.Concat(new String[]{header,test,loglevel,config,installAndConfigureService,installAndConfigureInstance,configFile,footer});
         }
     }
 }
