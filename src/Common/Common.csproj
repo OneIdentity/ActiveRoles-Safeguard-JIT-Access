@@ -14,7 +14,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="OneIdentity.SafeguardDotNet" Version="6.8.2" />
+    <PackageReference Include="OneIdentity.SafeguardDotNet" Version="6.9.0" />
     <PackageReference Include="System.Configuration.ConfigurationManager" Version="4.7.0" />
     <PackageReference Include="System.DirectoryServices" Version="4.7.0" />
   </ItemGroup>

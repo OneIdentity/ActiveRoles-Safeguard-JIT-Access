@@ -19,13 +19,13 @@ namespace OneIdentity.ARSGJitAccess.Common
 
         public SafeguardAssetAccount GetAssetAccount(string assetAccountId)
         {
-            var response = Connection.InvokeMethod(Service.Core, Method.Get, $"AssetAccounts/{assetAccountId}");
+            var response = InvokeMethod(Service.Core, Method.Get, $"AssetAccounts/{assetAccountId}");
             return JsonConvert.DeserializeObject<SafeguardAssetAccount>(response);
         }
 
         public SafeguardUser GetCurrentUser()
         {
-            var response = Connection.InvokeMethod(Service.Core, Method.Get, "Me");
+            var response = InvokeMethod(Service.Core, Method.Get, "Me");
             return JsonConvert.DeserializeObject<SafeguardUser>(response);
         }
 
@@ -35,13 +35,13 @@ namespace OneIdentity.ARSGJitAccess.Common
             {
                 {"filter",$"UserId eq {user.Id}"}
             };
-            var response = Connection.InvokeMethod(Service.Core, Method.Get, "EventSubscribers", null, parameters);
+            var response = InvokeMethod(Service.Core, Method.Get, "EventSubscribers", null, parameters);
             return JsonConvert.DeserializeObject<List<SafeguardEventSubscription>>(response);
         }
 
         public void CreateEventSubscription(SafeguardEventSubscription eventSubscription)
         {
-            Connection.InvokeMethod(Service.Core, Method.Post, "EventSubscribers", JsonConvert.SerializeObject(eventSubscription));
+            InvokeMethod(Service.Core, Method.Post, "EventSubscribers", JsonConvert.SerializeObject(eventSubscription));
         }
 
         public ISafeguardEventListener GetEventListener()
@@ -69,6 +69,16 @@ namespace OneIdentity.ARSGJitAccess.Common
             }
 
             return false;
+        }
+
+        private string InvokeMethod(Service service, Method method, string endpoint, string body = null, IDictionary<string, string> parameters = null, IDictionary<string, string> additionalHeaders = null, TimeSpan? timeout=null)
+        {
+            if (Connection.GetAccessTokenLifetimeRemaining() <= 0)
+            {
+                Log.Information("Access Token Expired. Re-authenticating to Safeguard.");
+                Connection.RefreshAccessToken();
+            }
+            return Connection.InvokeMethod(service, method, endpoint, body, parameters, additionalHeaders, timeout);            
         }
 
         ISafeguardConnection Connection
