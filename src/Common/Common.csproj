@@ -7,6 +7,9 @@
     <ApplicationIcon />
     <OutputType>Library</OutputType>
     <StartupObject />
+    <Version>9999.9999.9999</Version>
+    <AssemblyVersion>9999.9999.9999.9999</AssemblyVersion>
+    <FileVersion>9999.9999.9999.9999</FileVersion>
   </PropertyGroup>
 
   <ItemGroup>
@@ -14,9 +17,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="OneIdentity.SafeguardDotNet" Version="6.9.0" />
-    <PackageReference Include="System.Configuration.ConfigurationManager" Version="4.7.0" />
-    <PackageReference Include="System.DirectoryServices" Version="4.7.0" />
+    <PackageReference Include="OneIdentity.SafeguardDotNet" Version="7.0.0" />
+    <PackageReference Include="System.Configuration.ConfigurationManager" Version="7.0.0" />
+    <PackageReference Include="System.DirectoryServices" Version="7.0.0" />
   </ItemGroup>
 
 </Project>

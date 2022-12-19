@@ -10,7 +10,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("One Identity, Inc")]
 [assembly: AssemblyProduct("ARSGJitAccess")]
-[assembly: AssemblyCopyright("Copyright © 2020, OneIdentity, Inc. All rights reserved.")]
+[assembly: AssemblyCopyright("Copyright © 2022, OneIdentity, Inc. All rights reserved.")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -32,5 +32,5 @@ using System.Runtime.InteropServices;
 // You can specify all the values or you can default the Build and Revision Numbers
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("6.9.0.0")]
-[assembly: AssemblyFileVersion("6.9.0.0")]
+[assembly: AssemblyVersion("9999.9999.9999.9999")]
+[assembly: AssemblyFileVersion("9999.9999.9999.9999")]
