@@ -3,6 +3,8 @@ variables:
     value: '1.0.0'
   - name: isPrerelease
     value: ${{ true }}
+  - name: isPr
+    value: $[ eq(variables['Build.Reason'], 'PullRequest') ]
 
 trigger:
   branches:
