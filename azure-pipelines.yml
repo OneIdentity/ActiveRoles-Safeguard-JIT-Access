@@ -52,7 +52,6 @@ stages:
           KeyVaultName: 'CodeSigningCertificates'
           SecretsFilter: '*'
         displayName: 'Get code signing certificate from Azure Key Vault'
-        condition: suceeded()
 
       - powershell: |
           $kvSecretBytes = [System.Convert]::FromBase64String("$(OneIdentity-CodeSigning)")
@@ -63,7 +62,6 @@ stages:
           Write-Verbose -Verbose $certpath
           [System.IO.File]::WriteAllBytes($certpath, $protectedCertificateBytes)
         displayName: 'Save code signing certificate to PFX file'
-        condition: suceeded()
 
       - task: Bash@3
         inputs:
