@@ -14,9 +14,9 @@
              InstallScope="perUser" 
              InstallPrivileges="limited" />
 
-		<MajorUpgrade DowngradeErrorMessage="A newer version of ARS-Safeguard JIT Access is already installed." />
+    <MajorUpgrade DowngradeErrorMessage="A newer version of ARS-Safeguard JIT Access is already installed." />
 
-		<MediaTemplate EmbedCab="yes" />
+    <MediaTemplate EmbedCab="yes" />
 
     <WixVariable Id="WixUIBannerBmp" Value="$(var.SolutionDir)\Installer\resources\install-banner.bmp"/>
     <WixVariable Id="WixUIDialogBmp" Value="$(var.SolutionDir)\Installer\resources\install-panel.bmp"/>
@@ -71,7 +71,7 @@
     </Feature>
 
     <UI>
-      <UIRef Id="WixUI_Minimal" />
+        <UIRef Id="WixUI_Minimal" />
     </UI>
     
     <CustomAction Id="InstallAndConfigureService"
@@ -89,157 +89,151 @@
                   ExeCommand="-uninstallService"/>
 
     <InstallExecuteSequence>
-      <Custom Action="InstallAndConfigureService" After="InstallFinalize">NOT (REMOVE="ALL")</Custom>
-      <Custom Action="UninstallService" Before="InstallFinalize">(NOT UPGRADINGPRODUCTCODE) AND (REMOVE="ALL")</Custom>
+        <Custom Action="InstallAndConfigureService" After="InstallFinalize">NOT (REMOVE="ALL")</Custom>
+        <Custom Action="UninstallService" Before="InstallFinalize">(NOT UPGRADINGPRODUCTCODE) AND (REMOVE="ALL")</Custom>
     </InstallExecuteSequence>
 
-	</Product>
+    </Product>
 
-	<Fragment>
-    <Directory Id="TARGETDIR" Name="SourceDir">
-      <Directory Id="ProgramFilesFolder">
-        <Directory Id="OneIdentity" Name="One Identity">
-          <Directory Id="INSTALLFOLDER" Name="ARSSG-JitAccess" >
-            <Component Id="ARSGJITACCESS_EXE">
-              <File Id="ARSGJITACCESS_EXE" Source="$(var.SolutionDir)Service\bin\Release\ARSGJitAccess.exe" Name="ARSGJitAccess.exe"/>            
-            </Component>
-            <Component Id="Common_dll">
-              <File Id="Common_dll" Source="$(var.SolutionDir)Service\bin\Release\ARSGJitAccessCommon.dll" Name="ARSGJitAccessCommon.dll" />
-            </Component>
-            <Component Id="SignalR_Core_dll">
-              <File Id="SignalR_Core_dll" Source="$(var.SolutionDir)Service\bin\Release\Microsoft.AspNetCore.SignalR.Client.Core.dll" Name="Microsoft.AspNetCore.SignalR.Client.Core.dll" />
-            </Component>
-            <Component Id="SignalR_dll">
-              <File Id="SignalR_dll" Source="$(var.SolutionDir)Service\bin\Release\Microsoft.AspNetCore.SignalR.Client.dll" Name="Microsoft.AspNetCore.SignalR.Client.dll" />
-            </Component>
+    <Fragment>
+        <Directory Id="TARGETDIR" Name="SourceDir">
+            <Directory Id="ProgramFilesFolder">
+                <Directory Id="OneIdentity" Name="One Identity">
+                    <Directory Id="INSTALLFOLDER" Name="ARSSG-JitAccess" >
+                        <Component Id="ARSGJITACCESS_EXE">
+                            <File Id="ARSGJITACCESS_EXE" Source="$(var.SolutionDir)Service\bin\Release\ARSGJitAccess.exe" Name="ARSGJitAccess.exe"/>            
+                        </Component>
+                        <Component Id="Common_dll">
+                            <File Id="Common_dll" Source="$(var.SolutionDir)Service\bin\Release\ARSGJitAccessCommon.dll" Name="ARSGJitAccessCommon.dll" />
+                        </Component>
+                        <Component Id="SignalR_Core_dll">
+                            <File Id="SignalR_Core_dll" Source="$(var.SolutionDir)Service\bin\Release\Microsoft.AspNetCore.SignalR.Client.Core.dll" Name="Microsoft.AspNetCore.SignalR.Client.Core.dll" />
+                        </Component>
+                        <Component Id="SignalR_dll">
+                            <File Id="SignalR_dll" Source="$(var.SolutionDir)Service\bin\Release\Microsoft.AspNetCore.SignalR.Client.dll" Name="Microsoft.AspNetCore.SignalR.Client.dll" />
+                        </Component>
 
-            <Component Id="Microsoft_AspNetCore_Connections_Abstractions_dll">
-              <File Id="Microsoft_AspNetCore_Connections_Abstractions_dll" Source="$(var.SolutionDir)Service\bin\Release\Microsoft.AspNetCore.Connections.Abstractions.dll" Name="Microsoft.AspNetCore.Connections.Abstractions.dll" />
-            </Component>
-            <Component Id="Microsoft_AspNetCore_Http_Connections_Client_dll">
-              <File Id="Microsoft_AspNetCore_Http_Connections_Client_dll" Source="$(var.SolutionDir)Service\bin\Release\Microsoft.AspNetCore.Http.Connections.Client.dll" Name="Microsoft.AspNetCore.Http.Connections.Client.dll" />
-            </Component>
-            <Component Id="Microsoft_AspNetCore_Http_Connections_Common_dll">
-              <File Id="Microsoft_AspNetCore_Http_Connections_Common_dll" Source="$(var.SolutionDir)Service\bin\Release\Microsoft.AspNetCore.Http.Connections.Common.dll" Name="Microsoft.AspNetCore.Http.Connections.Common.dll" />
-            </Component>
-            <Component Id="Microsoft_AspNetCore_Http_Features_dll">
-              <File Id="Microsoft_AspNetCore_Http_Features_dll" Source="$(var.SolutionDir)Service\bin\Release\Microsoft.AspNetCore.Http.Features.dll" Name="Microsoft.AspNetCore.Http.Features.dll" />
-            </Component>
-            <Component Id="Microsoft_AspNetCore_SignalR_Common_dll">
-              <File Id="Microsoft_AspNetCore_SignalR_Common_dll" Source="$(var.SolutionDir)Service\bin\Release\Microsoft.AspNetCore.SignalR.Common.dll" Name="Microsoft.AspNetCore.SignalR.Common.dll" />
-            </Component>
-            <Component Id="Microsoft_AspNetCore_SignalR_Protocols_Json_dll">
-              <File Id="Microsoft_AspNetCore_SignalR_Protocols_Json_dll" Source="$(var.SolutionDir)Service\bin\Release\Microsoft.AspNetCore.SignalR.Protocols.Json.dll" Name="Microsoft.AspNetCore.SignalR.Protocols.Json.dll" />
-            </Component>
-            <Component Id="Microsoft_Bcl_AsyncInterfaces_dll">
-              <File Id="Microsoft_Bcl_AsyncInterfaces_dll" Source="$(var.SolutionDir)Service\bin\Release\Microsoft.Bcl.AsyncInterfaces.dll" Name="Microsoft.Bcl.AsyncInterfaces.dll" />
-            </Component>
-            <Component Id="Microsoft_Extensions_Configuration_Abstractions_dll">
-              <File Id="Microsoft_Extensions_Configuration_Abstractions_dll" Source="$(var.SolutionDir)Service\bin\Release\Microsoft.Extensions.Configuration.Abstractions.dll" Name="Microsoft.Extensions.Configuration.Abstractions.dll" />
-            </Component>
+                        <Component Id="Microsoft_AspNetCore_Connections_Abstractions_dll">
+                            <File Id="Microsoft_AspNetCore_Connections_Abstractions_dll" Source="$(var.SolutionDir)Service\bin\Release\Microsoft.AspNetCore.Connections.Abstractions.dll" Name="Microsoft.AspNetCore.Connections.Abstractions.dll" />
+                        </Component>
+                        <Component Id="Microsoft_AspNetCore_Http_Connections_Client_dll">
+                              <File Id="Microsoft_AspNetCore_Http_Connections_Client_dll" Source="$(var.SolutionDir)Service\bin\Release\Microsoft.AspNetCore.Http.Connections.Client.dll" Name="Microsoft.AspNetCore.Http.Connections.Client.dll" />
+                        </Component>
+                        <Component Id="Microsoft_AspNetCore_Http_Connections_Common_dll">
+                            <File Id="Microsoft_AspNetCore_Http_Connections_Common_dll" Source="$(var.SolutionDir)Service\bin\Release\Microsoft.AspNetCore.Http.Connections.Common.dll" Name="Microsoft.AspNetCore.Http.Connections.Common.dll" />
+                        </Component>
+                        <Component Id="Microsoft_AspNetCore_Http_Features_dll">
+                            <File Id="Microsoft_AspNetCore_Http_Features_dll" Source="$(var.SolutionDir)Service\bin\Release\Microsoft.AspNetCore.Http.Features.dll" Name="Microsoft.AspNetCore.Http.Features.dll" />
+                        </Component>
+                        <Component Id="Microsoft_AspNetCore_SignalR_Common_dll">
+                            <File Id="Microsoft_AspNetCore_SignalR_Common_dll" Source="$(var.SolutionDir)Service\bin\Release\Microsoft.AspNetCore.SignalR.Common.dll" Name="Microsoft.AspNetCore.SignalR.Common.dll" />
+                        </Component>
+                        <Component Id="Microsoft_AspNetCore_SignalR_Protocols_Json_dll">
+                            <File Id="Microsoft_AspNetCore_SignalR_Protocols_Json_dll" Source="$(var.SolutionDir)Service\bin\Release\Microsoft.AspNetCore.SignalR.Protocols.Json.dll" Name="Microsoft.AspNetCore.SignalR.Protocols.Json.dll" />
+                        </Component>
+                        <Component Id="Microsoft_Bcl_AsyncInterfaces_dll">
+                            <File Id="Microsoft_Bcl_AsyncInterfaces_dll" Source="$(var.SolutionDir)Service\bin\Release\Microsoft.Bcl.AsyncInterfaces.dll" Name="Microsoft.Bcl.AsyncInterfaces.dll" />
+                        </Component>
+                        <Component Id="Microsoft_Extensions_Configuration_Abstractions_dll">
+                            <File Id="Microsoft_Extensions_Configuration_Abstractions_dll" Source="$(var.SolutionDir)Service\bin\Release\Microsoft.Extensions.Configuration.Abstractions.dll" Name="Microsoft.Extensions.Configuration.Abstractions.dll" />
+                        </Component>
 
-            <Component Id="Microsoft_Extensions_Configuration_Binder_dll">
-              <File Id="Microsoft_Extensions_Configuration_Binder_dll" Source="$(var.SolutionDir)Service\bin\Release\Microsoft.Extensions.Configuration.Binder.dll" Name="Microsoft.Extensions.Configuration.Binder.dll" />
-            </Component>
-            <Component Id="Microsoft_Extensions_Configuration_dll">
-              <File Id="Microsoft_Extensions_Configuration_dll" Source="$(var.SolutionDir)Service\bin\Release\Microsoft.Extensions.Configuration.dll" Name="Microsoft.Extensions.Configuration.dll" />
-            </Component>
-            <Component Id="Microsoft_Extensions_DependencyInjection_Abstractions_dll">
-              <File Id="Microsoft_Extensions_DependencyInjection_Abstractions_dll" Source="$(var.SolutionDir)Service\bin\Release\Microsoft.Extensions.DependencyInjection.Abstractions.dll" Name="Microsoft.Extensions.DependencyInjection.Abstractions.dll" />
-            </Component>
-            <Component Id="Microsoft_Extensions_DependencyInjection_dll">
-              <File Id="Microsoft_Extensions_DependencyInjection_dll" Source="$(var.SolutionDir)Service\bin\Release\Microsoft.Extensions.DependencyInjection.dll" Name="Microsoft.Extensions.DependencyInjection.dll" />
-            </Component>
-            <Component Id="Microsoft_Extensions_Logging_Abstractions_dll">
-              <File Id="Microsoft_Extensions_Logging_Abstractions_dll" Source="$(var.SolutionDir)Service\bin\Release\Microsoft.Extensions.Logging.Abstractions.dll" Name="Microsoft.Extensions.Logging.Abstractions.dll" />
-            </Component>
-            <Component Id="Microsoft_Extensions_Logging_dll">
-              <File Id="Microsoft_Extensions_Logging_dll" Source="$(var.SolutionDir)Service\bin\Release\Microsoft.Extensions.Logging.dll" Name="Microsoft.Extensions.Logging.dll" />
-            </Component>
-            <Component Id="Microsoft_Extensions_Options_dll">
-              <File Id="Microsoft_Extensions_Options_dll" Source="$(var.SolutionDir)Service\bin\Release\Microsoft.Extensions.Options.dll" Name="Microsoft.Extensions.Options.dll" />
-            </Component>
-            <Component Id="Microsoft_Extensions_Primitives_dll">
-              <File Id="Microsoft_Extensions_Primitives_dll" Source="$(var.SolutionDir)Service\bin\Release\Microsoft.Extensions.Primitives.dll" Name="Microsoft.Extensions.Primitives.dll" />
-            </Component>
-            
-            
-            
-            
-            <Component Id="Newtonsoft_dll">
-              <File Id="Newtonsoft_dll" Source="$(var.SolutionDir)Service\bin\Release\Newtonsoft.Json.dll" Name="Newtonsoft.Json.dll" />
-            </Component>
-            <Component Id="RestSharp_dll">
-              <File Id="RestSharp_dll" Source="$(var.SolutionDir)Service\bin\Release\RestSharp.dll" Name="RestSharp.dll" />
-            </Component>
-            <Component Id="SafeguardDotNet_dll">
-              <File Id="SafeguardDotNet_dll" Source="$(var.SolutionDir)Service\bin\Release\OneIdentity.SafeguardDotNet.dll" Name="OneIdentity.SafeguardDotNet.dll" />
-            </Component>
-            <Component Id="Serilog_dll">
-              <File Id="Serilog_dll" Source="$(var.SolutionDir)Service\bin\Release\Serilog.dll" Name="Serilog.dll" />
-            </Component>
-            <Component Id="Serilog_Sinks_Console_dll">
-              <File Id="Serilog_Sinks_Console_dll" Source="$(var.SolutionDir)Service\bin\Release\Serilog.Sinks.Console.dll" Name="Serilog.Sinks.Console.dll" />
-            </Component>
-            <Component Id="Serilog_Sinks_EventLog_dll">
-              <File Id="Serilog_Sinks_EventLog_dll" Source="$(var.SolutionDir)Service\bin\Release\Serilog.Sinks.EventLog.dll" Name="Serilog.Sinks.EventLog.dll" />
-            </Component>
+                        <Component Id="Microsoft_Extensions_Configuration_Binder_dll">
+                            <File Id="Microsoft_Extensions_Configuration_Binder_dll" Source="$(var.SolutionDir)Service\bin\Release\Microsoft.Extensions.Configuration.Binder.dll" Name="Microsoft.Extensions.Configuration.Binder.dll" />
+                        </Component>
+                        <Component Id="Microsoft_Extensions_Configuration_dll">
+                            <File Id="Microsoft_Extensions_Configuration_dll" Source="$(var.SolutionDir)Service\bin\Release\Microsoft.Extensions.Configuration.dll" Name="Microsoft.Extensions.Configuration.dll" />
+                        </Component>
+                        <Component Id="Microsoft_Extensions_DependencyInjection_Abstractions_dll">
+                            <File Id="Microsoft_Extensions_DependencyInjection_Abstractions_dll" Source="$(var.SolutionDir)Service\bin\Release\Microsoft.Extensions.DependencyInjection.Abstractions.dll" Name="Microsoft.Extensions.DependencyInjection.Abstractions.dll" />
+                        </Component>
+                        <Component Id="Microsoft_Extensions_DependencyInjection_dll">
+                            <File Id="Microsoft_Extensions_DependencyInjection_dll" Source="$(var.SolutionDir)Service\bin\Release\Microsoft.Extensions.DependencyInjection.dll" Name="Microsoft.Extensions.DependencyInjection.dll" />
+                        </Component>
+                        <Component Id="Microsoft_Extensions_Logging_Abstractions_dll">
+                            <File Id="Microsoft_Extensions_Logging_Abstractions_dll" Source="$(var.SolutionDir)Service\bin\Release\Microsoft.Extensions.Logging.Abstractions.dll" Name="Microsoft.Extensions.Logging.Abstractions.dll" />
+                        </Component>
+                        <Component Id="Microsoft_Extensions_Logging_dll">
+                            <File Id="Microsoft_Extensions_Logging_dll" Source="$(var.SolutionDir)Service\bin\Release\Microsoft.Extensions.Logging.dll" Name="Microsoft.Extensions.Logging.dll" />
+                        </Component>
+                        <Component Id="Microsoft_Extensions_Options_dll">
+                            <File Id="Microsoft_Extensions_Options_dll" Source="$(var.SolutionDir)Service\bin\Release\Microsoft.Extensions.Options.dll" Name="Microsoft.Extensions.Options.dll" />
+                        </Component>
+                        <Component Id="Microsoft_Extensions_Primitives_dll">
+                            <File Id="Microsoft_Extensions_Primitives_dll" Source="$(var.SolutionDir)Service\bin\Release\Microsoft.Extensions.Primitives.dll" Name="Microsoft.Extensions.Primitives.dll" />
+                        </Component>
 
-            <Component Id="System_Buffers_dll">
-              <File Id="System_Buffers_dll" Source="$(var.SolutionDir)Service\bin\Release\System.Buffers.dll" Name="System.Buffers.dll" />
-            </Component>
-            <Component Id="System_ComponentModel_Annotations_dll">
-              <File Id="System_ComponentModel_Annotations_dll" Source="$(var.SolutionDir)Service\bin\Release\System.ComponentModel.Annotations.dll" Name="System.ComponentModel.Annotations.dll" />
-            </Component>
-            <Component Id="System_IO_Pipelines_dll">
-              <File Id="System_IO_Pipelines_dll" Source="$(var.SolutionDir)Service\bin\Release\System.IO.Pipelines.dll" Name="System.IO.Pipelines.dll" />
-            </Component>
-            <Component Id="System_Memory_dll">
-              <File Id="System_Memory_dll" Source="$(var.SolutionDir)Service\bin\Release\System.Memory.dll" Name="System.Memory.dll" />
-            </Component>
-            <Component Id="System_Numerics_Vectors_dll">
-              <File Id="System_Numerics_Vectors_dll" Source="$(var.SolutionDir)Service\bin\Release\System.Numerics.Vectors.dll" Name="System.Numerics.Vectors.dll" />
-            </Component>
-            <Component Id="System_Runtime_CompilerServices_Unsafe_dll">
-              <File Id="System_Runtime_CompilerServices_Unsafe_dll" Source="$(var.SolutionDir)Service\bin\Release\System.Runtime.CompilerServices.Unsafe.dll" Name="System.Runtime.CompilerServices.Unsafe.dll" />
-            </Component>
-            <Component Id="System_Text_Encodings_Web_dll">
-              <File Id="System_Text_Encodings_Web_dll" Source="$(var.SolutionDir)Service\bin\Release\System.Text.Encodings.Web.dll" Name="System.Text.Encodings.Web.dll" />
-            </Component>
-            <Component Id="System_Text_Json_dll">
-              <File Id="System_Text_Json_dll" Source="$(var.SolutionDir)Service\bin\Release\System.Text.Json.dll" Name="System.Text.Json.dll" />
-            </Component>
-            <Component Id="System_Threading_Channels_dll">
-              <File Id="System_Threading_Channels_dll" Source="$(var.SolutionDir)Service\bin\Release\System.Threading.Channels.dll" Name="System.Threading.Channels.dll" />
-            </Component>
-            <Component Id="System_Threading_Tasks_Extensions_dll">
-              <File Id="System_Threading_Tasks_Extensions_dll" Source="$(var.SolutionDir)Service\bin\Release\System.Threading.Tasks.Extensions.dll" Name="System.Threading.Tasks.Extensions.dll" />
-            </Component>
-            <Component Id="System_ValueTuple_dll">
-              <File Id="System_ValueTuple_dll" Source="$(var.SolutionDir)Service\bin\Release\System.ValueTuple.dll" Name="System.ValueTuple.dll" />
-            </Component>
-            
-            
 
-            <Component Id="Topshelf_dll">
-              <File Id="Topshelf_dll" Source="$(var.SolutionDir)Service\bin\Release\Topshelf.dll" Name="Topshelf.dll" />
-            </Component>
-            <Component Id="Topshelf_Serilog_dll">
-              <File Id="Topshelf_Serilog_dll" Source="$(var.SolutionDir)Service\bin\Release\Topshelf.Serilog.dll" Name="Topshelf.Serilog.dll" />
-            </Component>
-            <Component Id="ARSGJitAccess.exe.config">
-              <File Id="ARSGJitAccess.exe.config" Source="$(var.SolutionDir)Service\bin\Release\ARSGJitAccess.exe.config" Name="ARSGJitAccess.exe.config" />
-            </Component>
-            <Component Id="Topshelf_StartParameters_dll">
-              <File Id="Topshelf_StartParameters_dll" Source="$(var.SolutionDir)Service\bin\Release\Topshelf.StartParameters.dll" Name="Topshelf.StartParameters.dll" />
-            </Component>
+                        <Component Id="Newtonsoft_dll">
+                            <File Id="Newtonsoft_dll" Source="$(var.SolutionDir)Service\bin\Release\Newtonsoft.Json.dll" Name="Newtonsoft.Json.dll" />
+                        </Component>
+                        <Component Id="RestSharp_dll">
+                            <File Id="RestSharp_dll" Source="$(var.SolutionDir)Service\bin\Release\RestSharp.dll" Name="RestSharp.dll" />
+                        </Component>
+                        <Component Id="SafeguardDotNet_dll">
+                            <File Id="SafeguardDotNet_dll" Source="$(var.SolutionDir)Service\bin\Release\OneIdentity.SafeguardDotNet.dll" Name="OneIdentity.SafeguardDotNet.dll" />
+                        </Component>
+                        <Component Id="Serilog_dll">
+                            <File Id="Serilog_dll" Source="$(var.SolutionDir)Service\bin\Release\Serilog.dll" Name="Serilog.dll" />
+                        </Component>
+                        <Component Id="Serilog_Sinks_Console_dll">
+                            <File Id="Serilog_Sinks_Console_dll" Source="$(var.SolutionDir)Service\bin\Release\Serilog.Sinks.Console.dll" Name="Serilog.Sinks.Console.dll" />
+                        </Component>
+                        <Component Id="Serilog_Sinks_EventLog_dll">
+                            <File Id="Serilog_Sinks_EventLog_dll" Source="$(var.SolutionDir)Service\bin\Release\Serilog.Sinks.EventLog.dll" Name="Serilog.Sinks.EventLog.dll" />
+                        </Component>
 
-           
-            
+                        <Component Id="System_Buffers_dll">
+                            <File Id="System_Buffers_dll" Source="$(var.SolutionDir)Service\bin\Release\System.Buffers.dll" Name="System.Buffers.dll" />
+                        </Component>
+                        <Component Id="System_ComponentModel_Annotations_dll">
+                            <File Id="System_ComponentModel_Annotations_dll" Source="$(var.SolutionDir)Service\bin\Release\System.ComponentModel.Annotations.dll" Name="System.ComponentModel.Annotations.dll" />
+                        </Component>
+                        <Component Id="System_IO_Pipelines_dll">
+                            <File Id="System_IO_Pipelines_dll" Source="$(var.SolutionDir)Service\bin\Release\System.IO.Pipelines.dll" Name="System.IO.Pipelines.dll" />
+                        </Component>
+                        <Component Id="System_Memory_dll">
+                            <File Id="System_Memory_dll" Source="$(var.SolutionDir)Service\bin\Release\System.Memory.dll" Name="System.Memory.dll" />
+                        </Component>
+                        <Component Id="System_Numerics_Vectors_dll">
+                            <File Id="System_Numerics_Vectors_dll" Source="$(var.SolutionDir)Service\bin\Release\System.Numerics.Vectors.dll" Name="System.Numerics.Vectors.dll" />
+                        </Component>
+                        <Component Id="System_Runtime_CompilerServices_Unsafe_dll">
+                            <File Id="System_Runtime_CompilerServices_Unsafe_dll" Source="$(var.SolutionDir)Service\bin\Release\System.Runtime.CompilerServices.Unsafe.dll" Name="System.Runtime.CompilerServices.Unsafe.dll" />
+                        </Component>
+                        <Component Id="System_Text_Encodings_Web_dll">
+                            <File Id="System_Text_Encodings_Web_dll" Source="$(var.SolutionDir)Service\bin\Release\System.Text.Encodings.Web.dll" Name="System.Text.Encodings.Web.dll" />
+                        </Component>
+                        <Component Id="System_Text_Json_dll">
+                            <File Id="System_Text_Json_dll" Source="$(var.SolutionDir)Service\bin\Release\System.Text.Json.dll" Name="System.Text.Json.dll" />
+                        </Component>
+                        <Component Id="System_Threading_Channels_dll">
+                            <File Id="System_Threading_Channels_dll" Source="$(var.SolutionDir)Service\bin\Release\System.Threading.Channels.dll" Name="System.Threading.Channels.dll" />
+                        </Component>
+                        <Component Id="System_Threading_Tasks_Extensions_dll">
+                            <File Id="System_Threading_Tasks_Extensions_dll" Source="$(var.SolutionDir)Service\bin\Release\System.Threading.Tasks.Extensions.dll" Name="System.Threading.Tasks.Extensions.dll" />
+                        </Component>
+                        <Component Id="System_ValueTuple_dll">
+                            <File Id="System_ValueTuple_dll" Source="$(var.SolutionDir)Service\bin\Release\System.ValueTuple.dll" Name="System.ValueTuple.dll" />
+                        </Component>
 
-          </Directory>
+
+                        <Component Id="Topshelf_dll">
+                            <File Id="Topshelf_dll" Source="$(var.SolutionDir)Service\bin\Release\Topshelf.dll" Name="Topshelf.dll" />
+                        </Component>
+                        <Component Id="Topshelf_Serilog_dll">
+                            <File Id="Topshelf_Serilog_dll" Source="$(var.SolutionDir)Service\bin\Release\Topshelf.Serilog.dll" Name="Topshelf.Serilog.dll" />
+                        </Component>
+                        <Component Id="ARSGJitAccess.exe.config">
+                            <File Id="ARSGJitAccess.exe.config" Source="$(var.SolutionDir)Service\bin\Release\ARSGJitAccess.exe.config" Name="ARSGJitAccess.exe.config" />
+                        </Component>
+                        <Component Id="Topshelf_StartParameters_dll">
+                            <File Id="Topshelf_StartParameters_dll" Source="$(var.SolutionDir)Service\bin\Release\Topshelf.StartParameters.dll" Name="Topshelf.StartParameters.dll" />
+                        </Component>
+
+                    </Directory>
+                </Directory>
+            </Directory>
         </Directory>
-      </Directory>
-		</Directory>
-	</Fragment>
+  </Fragment>
 </Wix>
