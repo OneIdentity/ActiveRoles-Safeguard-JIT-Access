@@ -13,7 +13,7 @@ Param(
 Write-Host "SemanticVersion = $SemanticVersion"
 Write-Host "BuildId = $BuildId"
 
-$local:BuildNumber = ($BuildId - 170000)
+$local:BuildNumber = ($BuildId - 180000)
 Write-Host "BuildNumber = $($local:BuildNumber)"
 
 $local:PackageCodeMarker = "9999.9999.9999"

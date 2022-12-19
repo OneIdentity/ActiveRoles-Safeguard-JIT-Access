@@ -46,6 +46,12 @@ stages:
           arguments: $(Build.SourcesDirectory) $(semanticVersion) $(Build.BuildId) $$(isPrerelease)
         displayName: 'Setting build version'
 
+      - task: Bash@3
+        inputs:
+          targetType: 'inline'
+          script: 'env | sort'
+        displayName: 'Display environment variables'
+
       - task: AzureKeyVault@1
         inputs:
           azureSubscription: 'Azure.Infrastructure.CodeSigning'
@@ -62,12 +68,6 @@ stages:
           Write-Verbose -Verbose $certpath
           [System.IO.File]::WriteAllBytes($certpath, $protectedCertificateBytes)
         displayName: 'Save code signing certificate to PFX file'
-
-      - task: Bash@3
-        inputs:
-          targetType: 'inline'
-          script: 'env | sort'
-        displayName: 'Display environment variables'
 
       - task: NuGetToolInstaller@1
         displayName: 'Install NuGet tools'
