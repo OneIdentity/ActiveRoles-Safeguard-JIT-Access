@@ -1,5 +1,5 @@
 # ActiveRoles and Safeguard for Just-in-time Access
-Active Roles Just-in-Time Provisioning for Safeguard allows privileges to be assigned at the time of a credential check-out.  Accounts in AD that will require privileges to perform a function (i.e. Domain Admin) will be added to the appropriate group(s) when the the account is approved for check out in Safeguard.  This applies to both password requests and session requests. 
+Active Roles [Just-in-Time Provisioning](https://www.oneidentity.com/what-is-just-in-time-provisioning/) for Safeguard allows privileges to be assigned at the time of a credential check-out.  Accounts in AD that will require privileges to perform a function (i.e. Domain Admin) will be added to the appropriate group(s) when the the account is approved for check out in Safeguard.  This applies to both password requests and session requests. 
 
 This is accomplished by adding the "to be privileged" user account to the appropriate group as required, then removed when no longer required.  This further secures the AD environment from privilege escalation attacks.
 
